@@ -11,11 +11,11 @@ from app.guard.risk_guard import RiskGuardAgent
 from app.market.mock_market import MockMarketDataAgent
 from app.optimization.gene_search import BacktestOptimizationAgent
 from app.strategy.hedge_engine import HedgeEngine
-from backend.app.governance.governance_manager import GovernanceManager
-from evolution.manager import EvolutionManager
-from memory.memory_manager import MemoryManager
-from skills.shared.memory import list_winner_genes, promote_gene, remember_gene
-from identity.identity_manager import IdentityManager
+from app.governance import GovernanceManager
+from app.evolution import EvolutionManager
+from app.memory import MemoryManager
+from app.skills.shared.memory import list_winner_genes, promote_gene, remember_gene
+from app.identity.identity_manager import IdentityManager
 from enterprise_graph import EnterpriseGraphManager
 
 settings = get_settings()
@@ -46,7 +46,11 @@ optimizer = BacktestOptimizationAgent()
 genes_memory = WinnerGenesMemoryAgent(gene_store)
 memory_agent = MemoryManager(settings.memory_path)
 governance_agent = GovernanceManager()
-evolution_agent = EvolutionManager(memory_path=settings.memory_path)
+evolution_agent = EvolutionManager(
+    memory_path=settings.memory_path,
+    governance_rules_path=Path("./backend/app/governance"),
+    metrics_path=Path("./backend/app/evolution/metrics/evolution_metrics.json"),
+)
 identity_agent = IdentityManager()
 enterprise_graph_agent = EnterpriseGraphManager()
 
