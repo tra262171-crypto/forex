@@ -11,7 +11,7 @@ from app.guard.risk_guard import RiskGuardAgent
 from app.market.mock_market import MockMarketDataAgent
 from app.optimization.gene_search import BacktestOptimizationAgent
 from app.strategy.hedge_engine import HedgeEngine
-from governance.governance_manager import GovernanceManager
+from backend.app.governance.governance_manager import GovernanceManager
 from evolution.manager import EvolutionManager
 from memory.memory_manager import MemoryManager
 from skills.shared.memory import list_winner_genes, promote_gene, remember_gene
