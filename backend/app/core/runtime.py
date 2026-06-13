@@ -10,10 +10,10 @@ from app.core.state_store import GeneStore, JsonStateStore
 from app.execution.order_router import ExecutionAdapterAgent
 from app.guard.risk_guard import RiskGuardAgent
 from app.market.mock_market import MockMarketDataAgent
-from app.optimization.gene_search import BacktestOptimizationAgent
 from app.strategy.hedge_engine import HedgeEngine
 from app.governance import GovernanceManager
 from app.evolution import EvolutionManager
+from app.skills.optimization_engine.gene_search import BacktestOptimizer
 from app.memory import MemoryManager
 from app.skills.shared.memory import list_winner_genes, promote_gene, remember_gene
 from app.identity.identity_manager import IdentityManager
@@ -43,7 +43,7 @@ risk_guard = RiskGuardAgent(settings)
 fsm_brain = FsmBrainAgent()
 hedge_engine = HedgeEngine(settings.base_lot, settings.max_exposure_lots)
 execution_agent = ExecutionAdapterAgent(settings)
-optimizer = BacktestOptimizationAgent()
+optimizer = BacktestOptimizer()
 genes_memory = WinnerGenesMemoryAgent(gene_store)
 memory_agent = MemoryManager(settings.memory_path)
 governance_agent = GovernanceManager()
