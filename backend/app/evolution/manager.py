@@ -12,6 +12,10 @@ from .pattern_discovery import PatternDiscoveryEngine
 from .strategy_evaluator import StrategyEvaluator
 from .weakness_detector import WeaknessDetector
 from .improvement_engine import ImprovementEngine
+from .future_generator import FutureGenerator
+from .self_correction_engine import SelfCorrectionEngine
+from .regime_simulator import RegimeSimulator
+from .winner_dna import WinnerDna
 
 
 @dataclass
@@ -30,6 +34,10 @@ class EvolutionManager:
         self.strategy_evaluator = StrategyEvaluator(self.memory_manager)
         self.weakness_detector = WeaknessDetector(self.memory_manager)
         self.improvement_engine = ImprovementEngine(self.memory_manager)
+        self.future_generator = FutureGenerator(self.memory_manager)
+        self.self_correction_engine = SelfCorrectionEngine(self.memory_manager)
+        self.regime_simulator = RegimeSimulator(self.memory_manager)
+        self.winner_dna = WinnerDna(self.memory_manager)
         self.metrics_path = Path(metrics_path or "./backend/app/evolution/metrics/evolution_metrics.json")
         self.metrics = EvolutionMetrics()
 
@@ -56,6 +64,22 @@ class EvolutionManager:
             self.metrics.confidence_score = sum(item.get("confidence", 0.0) for item in recommendations) / len(recommendations)
         self._save_metrics()
         return recommendations
+
+    def generate_futures(self, evidence: dict[str, Any]) -> list[dict[str, Any]]:
+        futures = self.future_generator.generate(evidence)
+        self.metrics.discovered_patterns = len(futures)
+        self._save_metrics()
+        return futures
+
+    def self_correct(self, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        refined = self.self_correction_engine.refine(candidates)
+        return refined
+
+    def simulate_regimes(self, strategy_data: dict[str, Any]) -> list[dict[str, Any]]:
+        return self.regime_simulator.simulate(strategy_data)
+
+    def extract_winner_dna(self) -> dict[str, Any]:
+        return self.winner_dna.extract()
 
     def save_evolution_history(self, record: dict[str, Any]) -> str:
         record_path = Path("./backend/app/evolution/history")
